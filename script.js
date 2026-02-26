@@ -13,20 +13,20 @@ const gameBoard = (function () {
     } else {
       console.log("Kies een leeg vakje");
     }
-    function makeGrid() {
-      // bord in de ui zoeken en in var steken
-      const bord = document.querySelector(".bord");
-      // de tegels maken en op elk een evenlistener laten dragen
-      for (let i = 1; i <= 9; i++) {
-        const tile = document.createElement("div");
-        tile.classList.add("tegel", `tegel${i}`);
-        tile.dataset.tegel = i;
-        tile.addEventListener("click", (e) => {
-          console.log(`Je hebt op tegel ${e.target.dataset.tegel} geklikt`);
-        });
-        // de nieuwe tegen op het bord plakken
-        bord.appendChild(tile);
-      }
+  }
+  function makeGrid() {
+    // bord in de ui zoeken en in var steken
+    const bord = document.querySelector(".bord");
+    // de tegels maken en op elk een evenlistener laten dragen
+    for (let i = 1; i <= 9; i++) {
+      const tile = document.createElement("div");
+      tile.classList.add("tegel", `tegel${i}`);
+      tile.dataset.tegel = i;
+      tile.addEventListener("click", (e) => {
+        console.log(`Je hebt op tegel ${e.target.dataset.tegel} geklikt`);
+      });
+      // de nieuwe tegen op het bord plakken
+      bord.appendChild(tile);
     }
   }
 
