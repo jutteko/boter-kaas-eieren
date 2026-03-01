@@ -1,3 +1,5 @@
+let player1 = "";
+let player2 = "";
 // het gameboard
 // IIFE module want je hebt maar 1 spelbord nodig
 // ** bord maken
@@ -60,18 +62,14 @@ const GameController = (function () {
   return {};
 })();
 
-//het klikken op 'Play'
-const playBtn = document.querySelector("#btn-play");
-playBtn.addEventListener("click", (e) => {
-  e.preventDefault();
-  gameBoard.makeGrid();
-});
-
-// submit het formulier om te namen te creëren
+// submit het formulier om te namen te en grid te creëren
 const formNames = document.querySelector(".frm-names");
 formNames.addEventListener("submit", (e) => {
-  e.defaultPrevented();
+  e.preventDefault();
   //creëer de 2 spelers
-  const player1 = createPlayer(e.target.player1.value, "X");
-  const player2 = createPlayer(e.target.player2.value, "O");
+  console.log(e);
+  console.log(`de speler is ${e.target.player1.value}`);
+  player1 = createPlayer(e.target.player1.value, "X");
+  player2 = createPlayer(e.target.player2.value, "O");
+  gameBoard.makeGrid();
 });
