@@ -1,36 +1,45 @@
 // het gameboard
 // IIFE module want je hebt maar 1 spelbord nodig
-//
+// ** bord maken
+// ** bord samenstellen en tonen in html
+// ** vakjes aanklikbaar maken
 const gameBoard = (function () {
   let board = ["", "", "", "", "", "", "", "", ""];
 
   function getBoard() {
     return board;
   }
-  function maakZet(index, symbol) {
-    if (board[index] === "") {
-      board[index] = symbol;
-    } else {
-      console.log("Kies een leeg vakje");
-    }
-  }
   function makeGrid() {
     // bord in de ui zoeken en in var steken
     const bord = document.querySelector(".bord");
     // de tegels maken en op elk een evenlistener laten dragen
-    for (let i = 1; i <= 9; i++) {
-      const tile = document.createElement("div");
-      tile.classList.add("tegel", `tegel${i}`);
-      tile.dataset.tegel = i;
-      tile.addEventListener("click", (e) => {
-        console.log(`Je hebt op tegel ${e.target.dataset.tegel} geklikt`);
-      });
-      // de nieuwe tegen op het bord plakken
-      bord.appendChild(tile);
+    // als het bord al geen kinderen heeft
+    if (bord.children.length === 0) {
+      for (let i = 1; i <= 9; i++) {
+        const tile = document.createElement("div");
+        tile.classList.add("tegel", `tegel${i}`);
+        tile.dataset.tegel = i;
+        tile.addEventListener("click", (e) => {
+          const geklikteTegel = document.querySelector(
+            `.tegel${e.target.dataset.tegel}`,
+          );
+          console.log(geklikteTegel);
+          if (geklikteTegel.textContent !== "") {
+            console.log("Dit veld is al bezet");
+          } else {
+            board[e.target.dataset.tegel - 1] = "X";
+            geklikteTegel.textContent = "X";
+          }
+        });
+        // de nieuwe tegeld op het bord plakken
+        bord.appendChild(tile);
+      }
+    } else {
+      console.log("je hebt al een bord getekend");
     }
   }
 
-  return { maakZet, makeGrid };
+  return { makeGrid };
 })();
 
 // Functie om spelers te creëren
@@ -43,10 +52,6 @@ const createPlayer = function (name, symbol) {
   };
 };
 
-// het creëren van 2 spelers via de factory function
-const player1 = createPlayer("Jürgen", "X"); // zal na het klikken van btn gebeuren
-const player2 = createPlayer("Ángel", "O");
-
 // GameController
 //IIFE module want je  hebt maar 1 controller nodig per game.
 const GameController = (function () {
@@ -55,7 +60,18 @@ const GameController = (function () {
   return {};
 })();
 
+//het klikken op 'Play'
 const playBtn = document.querySelector("#btn-play");
 playBtn.addEventListener("click", (e) => {
+  e.preventDefault();
   gameBoard.makeGrid();
+});
+
+// submit het formulier om te namen te creëren
+const formNames = document.querySelector(".frm-names");
+formNames.addEventListener("submit", (e) => {
+  e.defaultPrevented();
+  //creëer de 2 spelers
+  const player1 = createPlayer(e.target.player1.value, "X");
+  const player2 = createPlayer(e.target.player2.value, "O");
 });
