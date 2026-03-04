@@ -29,6 +29,7 @@ const gameBoard = (function () {
           if (geklikteTegel.textContent !== "") {
             console.log("Dit veld is al bezet");
           } else {
+            console.log(`de index is ${gameController.getActivePlayer()}`);
             board[e.target.dataset.tegel - 1] = "X";
             geklikteTegel.textContent = "X";
           }
@@ -56,20 +57,33 @@ const createPlayer = function (name, symbol) {
 
 // GameController
 //IIFE module want je  hebt maar 1 controller nodig per game.
-const GameController = (function () {
-  const players = [player1, player2];
-  //
-  return {};
+const gameController = (function () {
+  let players = [];
+  let activePlayerIndex = 0;
+
+  const startSpel = function (p1, p2) {
+    players = [p1, p2];
+    activePlayerIndex = 0;
+  };
+
+  const getActivePlayer = function () {
+    return players[activePlayerIndex];
+  };
+
+  const wisselBeurt = function () {
+    activePlayerIndex = activePlayerIndex === 0 ? 1 : 0;
+  };
+
+  return { startSpel, getActivePlayer, wisselBeurt };
 })();
 
-// submit het formulier om te namen te en grid te creëren
+// submit het formulier om te namen <en grid te creëren
 const formNames = document.querySelector(".frm-names");
 formNames.addEventListener("submit", (e) => {
   e.preventDefault();
   //creëer de 2 spelers
-  console.log(e);
-  console.log(`de speler is ${e.target.player1.value}`);
   player1 = createPlayer(e.target.player1.value, "X");
   player2 = createPlayer(e.target.player2.value, "O");
+  gameBoard.startSpel(player1, player2);
   gameBoard.makeGrid();
 });
