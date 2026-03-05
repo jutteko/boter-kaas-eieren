@@ -30,8 +30,11 @@ const gameBoard = (function () {
             console.log("Dit veld is al bezet");
           } else {
             console.log(`de index is ${gameController.getActivePlayer()}`);
-            board[e.target.dataset.tegel - 1] = "X";
-            geklikteTegel.textContent = "X";
+            board[e.target.dataset.tegel - 1] =
+              getComputedStyle[activePlayerIndex].symbol;
+            geklikteTegel.textContent =
+              getComputedStyle[activePlayerIndex].symbol;
+            gameController.wisselBeurt();
           }
         });
         // de nieuwe tegeld op het bord plakken
