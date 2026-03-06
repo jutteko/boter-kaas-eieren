@@ -25,19 +25,21 @@ const gameBoard = (function () {
           const geklikteTegel = document.querySelector(
             `.tegel${e.target.dataset.tegel}`,
           );
-          console.log(geklikteTegel);
+          //als er al een O of X staat, melding
           if (geklikteTegel.textContent !== "") {
             console.log("Dit veld is al bezet");
+            // anders X of O plaatsen
           } else {
-            console.log(`de index is ${gameController.getActivePlayer()}`);
-            board[e.target.dataset.tegel - 1] =
-              getComputedStyle[activePlayerIndex].symbol;
-            geklikteTegel.textContent =
-              getComputedStyle[activePlayerIndex].symbol;
+            const actieveSpeler = gameController.getActivePlayer();
+            board[e.target.dataset.tegel - 1] = actieveSpeler.symbol;
+            geklikteTegel.textContent = actieveSpeler.symbol;
+            // checken of er iemand gewonnen heeft
+            gameController.checkWin();
+            // wissel beurt
             gameController.wisselBeurt();
           }
         });
-        // de nieuwe tegeld op het bord plakken
+        // de nieuwe tegels op het bord plakken
         bord.appendChild(tile);
       }
     } else {
@@ -45,7 +47,7 @@ const gameBoard = (function () {
     }
   }
 
-  return { makeGrid };
+  return { makeGrid, getBoard };
 })();
 
 // Functie om spelers te creëren
@@ -76,10 +78,44 @@ const gameController = (function () {
   const wisselBeurt = function () {
     activePlayerIndex = activePlayerIndex === 0 ? 1 : 0;
   };
+  const checkWin = function () {
+    const possibleWins = [
+      [0, 4, 8],
+      [0, 1, 2],
+      [0, 3, 6],
+      [1, 4, 7],
+      [2, 5, 8],
+      [2, 4, 6],
+      [3, 4, 5],
+      [6, 7, 8],
+    ];
+    const bord = gameBoard.getBoard();
+    possibleWins.forEach((comb) => {
+      if (
+        (bord[comb[0]] === "X" &&
+          bord[comb[1]] === "X" &&
+          bord[comb[2]] === "X") ||
+        (bord[comb[0]] === "O" &&
+          bord[comb[1]] === "O" &&
+          bord[comb[2]] === "O")
+      ) {
+        const tegel1 = document.querySelector(`.tegel${comb[0] + 1}`);
+        const tegel2 = document.querySelector(`.tegel${comb[1] + 1}`);
+        const tegel3 = document.querySelector(`.tegel${comb[2] + 1}`);
+        tegel1.classList.add("gewonnen-tegel");
+        tegel2.classList.add("gewonnen-tegel");
+        tegel3.classList.add("gewonnen-tegel");
+        const scorebord = document.querySelector(".container-onder-bord H2");
+        scorebord.textContent = `Congratulations! ${getActivePlayer().name} won!`;
+      }
+    });
+  };
 
-  return { startSpel, getActivePlayer, wisselBeurt };
+  return { startSpel, getActivePlayer, wisselBeurt, checkWin };
 })();
-
+//
+//
+//
 // submit het formulier om te namen <en grid te creëren
 const formNames = document.querySelector(".frm-names");
 formNames.addEventListener("submit", (e) => {
@@ -87,6 +123,6 @@ formNames.addEventListener("submit", (e) => {
   //creëer de 2 spelers
   player1 = createPlayer(e.target.player1.value, "X");
   player2 = createPlayer(e.target.player2.value, "O");
-  gameBoard.startSpel(player1, player2);
+  gameController.startSpel(player1, player2);
   gameBoard.makeGrid();
 });

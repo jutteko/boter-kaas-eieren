@@ -61,6 +61,9 @@
   font-size: 5rem;
   font-weight: 700;
 }
+.gewonnen-tegel {
+  background-color: chartreuse;
+}
 .container-onder-bord {
   display: flex;
   justify-content: center;
